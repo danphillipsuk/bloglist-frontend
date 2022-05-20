@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -9,7 +10,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser]= useState(null)
-
+  const [errorMessage, setErrorMessage] = useState(null)
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -47,7 +48,12 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      console.log("Error")
+      setErrorMessage(
+        'Username or password incorrect'
+      )
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 3000)
     }
   }
 
@@ -67,6 +73,12 @@ const App = () => {
         setTitle('')
         setAuthor('')
         setUrl('')
+        setErrorMessage(
+          `${blogObject.title} by ${blogObject.author} added`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 3000)
       })
   }
 
@@ -144,6 +156,7 @@ const App = () => {
   if (user === null) {
     return (
       <div>
+        <Notification message={errorMessage} />
         <h2>Log in to application</h2>
         {loginForm()}
       </div>
@@ -151,6 +164,7 @@ const App = () => {
   }
   return (
     <div>
+      <Notification message={errorMessage} />
       <h2>Blogs</h2>
       <h3>{user.name} is logged in<button onClick={logout}>logout</button></h3>
       {blogs.map(blog =>
