@@ -118,15 +118,18 @@ const App = () => {
   return (
     <div>
       <Notification message={errorMessage} />
+
       <h2>Blogs</h2>
+
       <h3>{user.name} is logged in<button onClick={logout}>logout</button></h3>
+
+      <Togglable buttonLabel='Create New Entry' ref={blogFormRef}>
+        <NewBlogForm submitNewBlog={submitBlog} />
+      </Togglable>
+
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
-
-      <Togglable buttonLabel='Add new' ref={blogFormRef}>
-        <NewBlogForm submitNewBlog={submitBlog} />
-      </Togglable>
 
     </div>
   )
