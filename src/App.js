@@ -18,7 +18,9 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs( blogs.sort(function (a,b) {
+        return a.likes < b.likes
+      }) )
     )  
   }, [])
 
@@ -71,6 +73,43 @@ const App = () => {
       })
   }
 
+  // const likesPlusOne = (blogObject, id) => {
+  //   blogService
+  //   .addLike(blogObject, id)
+  //   .then(returnedBlog => {
+  //     const update = blogs.find(element => element.id === id)
+  //     blogs.splice(blogs.indexOf(update), 1, returnedBlog)
+  //     setBlogs(blogs.sort(function (a,b) { 
+  //       return a.likes < b.likes
+  //     }))
+  //     setErrorMessage(
+  //       `${returnedBlog.title} has ${returnedBlog.likes} likes`
+  //     )
+  //     setTimeout(() => {
+  //       setErrorMessage(null)
+  //     }, 3000)
+  //   })
+  // }
+
+  const likesPlusOne = async (blogObject, id) => {
+    try {
+      const response = await blogService.addLike(blogObject, id)
+      const update = blogs.find(element => element.id === id)
+      blogs.splice(blogs.indexOf(update), 1, response)
+      setBlogs(blogs.sort(function (a,b) { 
+        return a.likes < b.likes
+      }))
+      setErrorMessage(
+        `${response.title} has ${response.likes} likes`
+      )
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 3000)
+    } catch(exception) {
+      console.log(exception)
+    }
+  }
+
   const logout = (event) => {
     event.preventDefault()
     window.localStorage.clear()
@@ -105,6 +144,7 @@ const App = () => {
 
   const blogFormRef = useRef()
 
+
   if (user === null) {
     return (
       <div>
@@ -128,7 +168,7 @@ const App = () => {
       </Togglable>
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} likesPlusOne={likesPlusOne} addedBy={user.username} />
       )}
 
     </div>

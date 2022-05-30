@@ -16,10 +16,15 @@ const create = async newObject => {
   const config = {
     headers: { Authorization: token },
   }
-
   const response = await axios.post(baseUrl, newObject, config)
   return response.data
 }
 
+const addLike = async (likePlusOne, id) => {
+  const updateUrl = `${baseUrl}/${id}`
+  const response = await axios.put(updateUrl, likePlusOne)
+  return response.data
+}
+
 // eslint-disable-next-line 
-export default { getAll, setToken, create }
+export default { getAll, setToken, create, addLike }

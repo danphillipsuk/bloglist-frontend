@@ -60,7 +60,7 @@ const NewBlogForm = ({ submitNewBlog }) => {
         </div>
       </form>    
     </div>
-)
-  }
+  )
+}
 
 export default NewBlogForm
