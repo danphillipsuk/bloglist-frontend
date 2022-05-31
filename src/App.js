@@ -20,7 +20,7 @@ const App = () => {
       setBlogs( blogs.sort(function (a,b) {
         return a.likes < b.likes
       }) )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const App = () => {
   const submitBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility()
     const newEntry = await blogService.create(blogObject)
-    await setBlogs(blogs.concat(newEntry))
+    await setBlogs(blogs.concat({ ...newEntry, user }))
     setErrorMessage(
       `${blogObject.title} by ${blogObject.author} added`
     )
@@ -74,7 +74,7 @@ const App = () => {
         const newBlogs = [...blogs]
         const update = newBlogs.find(element => element.id === id)
         newBlogs[newBlogs.indexOf(update)].likes +=1
-        setBlogs(newBlogs.sort(function (a,b) { 
+        setBlogs(newBlogs.sort(function (a,b) {
           return a.likes < b.likes
         }))
       })
@@ -86,7 +86,7 @@ const App = () => {
       const update = blogs.find(element => element.id === blogId)
       const newBlogs = [...blogs]
       newBlogs.splice(newBlogs.indexOf(update), 1)
-      setBlogs(newBlogs.sort(function (a,b) { 
+      setBlogs(newBlogs.sort(function (a,b) {
         return a.likes < b.likes
       }))
       setErrorMessage(
@@ -113,19 +113,19 @@ const App = () => {
       <div>
         Username
         <input
-        type="text"
-        value={username}
-        name="Username"
-        onChange={({ target }) => setUsername(target.value)}
+          type="text"
+          value={username}
+          name="Username"
+          onChange={({ target }) => setUsername(target.value)}
         />
       </div>
       <div>
         Password
         <input
-        type="password"
-        value={password}
-        name="Password"
-        onChange={({ target }) => setPassword(target.value)}
+          type="password"
+          value={password}
+          name="Password"
+          onChange={({ target }) => setPassword(target.value)}
         />
       </div>
       <div>
@@ -136,7 +136,6 @@ const App = () => {
 
   const blogFormRef = useRef()
 
-
   if (user === null) {
     return (
       <div>
@@ -146,7 +145,7 @@ const App = () => {
       </div>
     )
   }
-  
+
   return (
     <div>
       <Notification message={errorMessage} />
@@ -160,12 +159,12 @@ const App = () => {
       </Togglable>
 
       {blogs.map(blog =>
-        <Blog 
-          key={blog.id} 
-          blog={blog} 
-          likesPlusOne={likesPlusOne} 
+        <Blog
+          key={blog.id}
+          blog={blog}
+          likesPlusOne={likesPlusOne}
           addedBy={user.username}
-          deleteBlog={deleteBlog} 
+          deleteBlog={deleteBlog}
         />
       )}
 

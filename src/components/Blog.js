@@ -1,7 +1,8 @@
-import { useState } from "react"
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 
-const Blog = ({blog, likesPlusOne, addedBy, deleteBlog }) => {
-  
+const Blog = ({ blog, likesPlusOne, addedBy, deleteBlog }) => {
+
   const blogStyle = {
     paddingTop: 5,
     paddingLeft: 10,
@@ -19,7 +20,7 @@ const Blog = ({blog, likesPlusOne, addedBy, deleteBlog }) => {
 
   const [blogDetailsVisible, setBlogDetailsVisible] = useState(false)
   const hideWhenVisible = { display: blogDetailsVisible ? 'none': '' }
-  const showWhenVisible = { display: blogDetailsVisible ? '' : 'none'}
+  const showWhenVisible = { display: blogDetailsVisible ? '' : 'none' }
 
   const increaseLikes = () => {
 
@@ -39,7 +40,7 @@ const Blog = ({blog, likesPlusOne, addedBy, deleteBlog }) => {
   }
 
   return (
-  
+
     <div style={blogStyle}>
       <h3>{blog.title} | {blog.author}
         <button onClick={() => setBlogDetailsVisible(true)} style={hideWhenVisible}>View</button>
@@ -51,13 +52,17 @@ const Blog = ({blog, likesPlusOne, addedBy, deleteBlog }) => {
           <p>{blog.url}</p>
           <p>{blog.likes} <button onClick={increaseLikes}>Like</button></p>
           <p>Added By {blog.user.username}</p>
-          {addedBy === blog.user.username ? ( 
-          <button onClick={removeBlog}>Remove</button>) : ( '' ) }
+          {addedBy === blog.user.username ? ( <button onClick={removeBlog}>Remove</button>) : ( '' ) }
         </div>
       </div>
 
-    </div>  
+    </div>
   )
+}
+
+Blog.propTypes = {
+  likesPlusOne: PropTypes.func.isRequired,
+  deleteBlog: PropTypes.func.isRequired
 }
 
 export default Blog

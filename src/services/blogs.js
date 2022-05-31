@@ -36,5 +36,5 @@ const deleteBlog = async (id) => {
 }
 
 
-// eslint-disable-next-line 
+// eslint-disable-next-line
 export default { getAll, setToken, create, addLike, deleteBlog }

@@ -1,6 +1,7 @@
-import { useState } from "react"
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 
-const NewBlogForm = ({ submitNewBlog, user }) => {
+const NewBlogForm = ({ submitNewBlog }) => {
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -19,7 +20,7 @@ const NewBlogForm = ({ submitNewBlog, user }) => {
   const addBlog = (event) => {
     event.preventDefault()
 
-  submitNewBlog({
+    submitNewBlog({
       title: title,
       author: author,
       url: url,
@@ -37,30 +38,34 @@ const NewBlogForm = ({ submitNewBlog, user }) => {
         <div>
           Title:
           <input
-          value={title}
-          onChange={handleTitleChange}
+            value={title}
+            onChange={handleTitleChange}
           />
         </div>
         <div>
           Author:
           <input
-          value={author}
-          onChange={handleAuthorChange}
+            value={author}
+            onChange={handleAuthorChange}
           />
         </div>
         <div>
           URL:
           <input
-          value={url}
-          onChange={handleUrlChange}
+            value={url}
+            onChange={handleUrlChange}
           />
         </div>
         <div>
           <button type="submit">Submit</button>
         </div>
-      </form>    
+      </form>
     </div>
   )
+}
+
+NewBlogForm.propTypes = {
+  submitNewBlog: PropTypes.func.isRequired
 }
 
 export default NewBlogForm
