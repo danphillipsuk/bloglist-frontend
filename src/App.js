@@ -10,7 +10,6 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser]= useState(null)
@@ -35,12 +34,10 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-
     try {
       const user = await loginService.login({
         username, password,
       })
-
       window.localStorage.setItem(
         'loggedBloglistUser', JSON.stringify(user)
       )
@@ -58,57 +55,52 @@ const App = () => {
     }
   }
 
-  const submitBlog = (blogObject) => {
+  const submitBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility()
+    const newEntry = await blogService.create(blogObject)
+    await setBlogs(blogs.concat(newEntry))
+    setErrorMessage(
+      `${blogObject.title} by ${blogObject.author} added`
+    )
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 3000)
+  }
+
+  const likesPlusOne = (blogObject, id) => {
     blogService
-      .create(blogObject)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-        setErrorMessage(
-          `${blogObject.title} by ${blogObject.author} added`
-        )
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 3000)
+      .addLike(blogObject, id)
+      .then(() => {
+        const newBlogs = [...blogs]
+        const update = newBlogs.find(element => element.id === id)
+        newBlogs[newBlogs.indexOf(update)].likes +=1
+        setBlogs(newBlogs.sort(function (a,b) { 
+          return a.likes < b.likes
+        }))
       })
   }
 
-  // const likesPlusOne = (blogObject, id) => {
-  //   blogService
-  //   .addLike(blogObject, id)
-  //   .then(returnedBlog => {
-  //     const update = blogs.find(element => element.id === id)
-  //     blogs.splice(blogs.indexOf(update), 1, returnedBlog)
-  //     setBlogs(blogs.sort(function (a,b) { 
-  //       return a.likes < b.likes
-  //     }))
-  //     setErrorMessage(
-  //       `${returnedBlog.title} has ${returnedBlog.likes} likes`
-  //     )
-  //     setTimeout(() => {
-  //       setErrorMessage(null)
-  //     }, 3000)
-  //   })
-  // }
-
-  const likesPlusOne = async (blogObject, id) => {
+  const deleteBlog = async (blogId) => {
     try {
-      const response = await blogService.addLike(blogObject, id)
-      const update = blogs.find(element => element.id === id)
-      blogs.splice(blogs.indexOf(update), 1, response)
-      setBlogs(blogs.sort(function (a,b) { 
+      await blogService.deleteBlog(blogId)
+      const update = blogs.find(element => element.id === blogId)
+      const newBlogs = [...blogs]
+      newBlogs.splice(newBlogs.indexOf(update), 1)
+      setBlogs(newBlogs.sort(function (a,b) { 
         return a.likes < b.likes
       }))
       setErrorMessage(
-        `${response.title} has ${response.likes} likes`
+        `${update.title} has been removed`
       )
       setTimeout(() => {
         setErrorMessage(null)
       }, 3000)
-    } catch(exception) {
+    }
+    catch(exception) {
       console.log(exception)
     }
   }
+
 
   const logout = (event) => {
     event.preventDefault()
@@ -164,11 +156,17 @@ const App = () => {
       <h3>{user.name} is logged in<button onClick={logout}>logout</button></h3>
 
       <Togglable buttonLabel='Create New Entry' ref={blogFormRef}>
-        <NewBlogForm submitNewBlog={submitBlog} />
+        <NewBlogForm submitNewBlog={submitBlog} user={user}/>
       </Togglable>
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} likesPlusOne={likesPlusOne} addedBy={user.username} />
+        <Blog 
+          key={blog.id} 
+          blog={blog} 
+          likesPlusOne={likesPlusOne} 
+          addedBy={user.username}
+          deleteBlog={deleteBlog} 
+        />
       )}
 
     </div>

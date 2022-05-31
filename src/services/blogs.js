@@ -23,8 +23,18 @@ const create = async newObject => {
 const addLike = async (likePlusOne, id) => {
   const updateUrl = `${baseUrl}/${id}`
   const response = await axios.put(updateUrl, likePlusOne)
-  return response.data
+  return response.status
 }
 
+const deleteBlog = async (id) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+  const deleteUrl = `${baseUrl}/${id}`
+  const response = await axios.delete(deleteUrl, config)
+  return response.status
+}
+
+
 // eslint-disable-next-line 
-export default { getAll, setToken, create, addLike }
+export default { getAll, setToken, create, addLike, deleteBlog }

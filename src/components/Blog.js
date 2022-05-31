@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const Blog = ({blog, likesPlusOne, addedBy }) => {
+const Blog = ({blog, likesPlusOne, addedBy, deleteBlog }) => {
   
   const blogStyle = {
     paddingTop: 5,
@@ -32,22 +32,28 @@ const Blog = ({blog, likesPlusOne, addedBy }) => {
     }, blog.id)
   }
 
-  return (
-    <div style={blogStyle}>
-      <h3>{blog.title} | {blog.author} | {blog.likes}</h3>
+  const removeBlog = () => {
+    if (window.confirm(`Do you want to delete ${blog.title}?`)) {
+      deleteBlog(blog.id)
+    }
+  }
 
-      <div style={hideWhenVisible}>
-        <button onClick={() => setBlogDetailsVisible(true)}>View</button>
-      </div>
+  return (
+  
+    <div style={blogStyle}>
+      <h3>{blog.title} | {blog.author}
+        <button onClick={() => setBlogDetailsVisible(true)} style={hideWhenVisible}>View</button>
+        <button onClick={() => setBlogDetailsVisible(false)} style={showWhenVisible}>hide</button>
+      </h3>
 
       <div style={showWhenVisible}>
         <div style={infoStyle}>
           <p>{blog.url}</p>
           <p>{blog.likes} <button onClick={increaseLikes}>Like</button></p>
-          <p>Added By {blog.user.name}</p>
-          <button onClick={() => setBlogDetailsVisible(false)}>hide</button>
+          <p>Added By {blog.user.username}</p>
+          {addedBy === blog.user.username ? ( 
+          <button onClick={removeBlog}>Remove</button>) : ( '' ) }
         </div>
-    
       </div>
 
     </div>  
