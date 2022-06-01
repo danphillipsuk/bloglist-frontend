@@ -101,7 +101,6 @@ const App = () => {
     }
   }
 
-
   const logout = (event) => {
     event.preventDefault()
     window.localStorage.clear()
