@@ -35,7 +35,27 @@ describe('Blog app', function() {
       cy.get('#submit-button').click()
       cy.contains('Username or password incorrect')
     })
-
   })
+
+  describe('When logged in', function() {
+
+    beforeEach(function() {
+      cy.contains('Login').click()
+      cy.get('#username').type('root')
+      cy.get('#password').type('password')
+      cy.get('#submit-button').click()
+    })
+
+    it('A blog can be created', function() {
+      cy.contains('Create New Entry').click()
+      cy.get('#title').type('An entry from Cypress')
+      cy.get('#author').type('A N Author')
+      cy.get('#url').type('www.justiceforjohnnydepp.com')
+      cy.contains('Save').click()
+
+    })
+  })
+
+
 
 })
