@@ -50,7 +50,7 @@ const Blog = ({ blog, likesPlusOne, addedBy, deleteBlog }) => {
       <div style={showWhenVisible} className='blogInfo'>
         <div style={infoStyle}>
           <p>{blog.url}</p>
-          <p>{blog.likes} <button onClick={increaseLikes}>Like</button></p>
+          <p><span id='likes'>{blog.likes}</span> <button onClick={increaseLikes}>Like</button></p>
           <p>Added By {blog.user.username}</p>
           {addedBy === blog.user.username ? ( <button onClick={removeBlog}>Remove</button>) : ( '' ) }
         </div>

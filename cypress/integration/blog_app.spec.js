@@ -52,8 +52,20 @@ describe('Blog app', function() {
       cy.get('#author').type('A N Author')
       cy.get('#url').type('www.justiceforjohnnydepp.com')
       cy.contains('Save').click()
-
     })
+
+    it('A blog can be liked', function() {
+      cy.contains('Create New Entry').click()
+      cy.get('#title').type('An entry from Cypress')
+      cy.get('#author').type('A N Author')
+      cy.get('#url').type('www.justiceforjohnnydepp.com')
+      cy.contains('Save').click()
+      cy.contains('View').click()
+      cy.get('#likes').contains('0')
+      cy.contains('Like').click()
+      cy.get('#likes').contains('1')
+    })
+
   })
 
 
