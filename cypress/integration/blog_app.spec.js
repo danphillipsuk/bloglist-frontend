@@ -66,7 +66,18 @@ describe('Blog app', function() {
       cy.get('#likes').contains('1')
     })
 
+    it('A blog can be deleted by the user who created it', function() {
+      cy.contains('Create New Entry').click()
+      cy.get('#title').type('An entry from Cypress')
+      cy.get('#author').type('A N Author')
+      cy.get('#url').type('www.justiceforjohnnydepp.com')
+      cy.contains('Save').click()
+      cy.contains('View').click()
+      cy.contains('Remove').click()
+    })
+
   })
+
 
 
 
